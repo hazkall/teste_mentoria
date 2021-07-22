@@ -59,7 +59,8 @@
     keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
 
 
-- apt_repository:
+- name: instala o repo do k8s
+  apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
     state: present
     filename: kubernetes.list
@@ -67,9 +68,9 @@
 - name: Instalação do kubernetes
   apt:
     pkg:
-    - kubelet
-    - kubeadm
-    - kubectl
+    - "kubelet={{ k8s_version }}*"
+    - "kubeadm={{ k8s_version }}*"
+    - "kubectl={{ k8s_version }}*"
     state: present
     update_cache: yes
 
@@ -82,7 +83,12 @@
     - kubeadm
     - kubectl
 
-
+- name: Instalando o helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  args:
+    creates: /usr/local/bin/helm
+  tags:
+   - tools
 
 
 
