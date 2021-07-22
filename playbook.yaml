@@ -1,0 +1,7 @@
+---
+- name: instala k8s
+  hosts: kubernetes
+  roles:
+    - teste_mentoria
+  user: vagrant
+  become: yes
