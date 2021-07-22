@@ -1,5 +1,4 @@
 ---
-
 - name: Configuração de modulo para kubernetes
   lineinfile:
     path: /etc/modules-load.d/k8s.conf
@@ -10,12 +9,12 @@
 - name: Habilita o modulo do br_netfilter
   modprobe:
     name: br_netfilter
-    state: present   
+    state: present
 
 - name: Confiração do iptables
   sysctl:
     name: "{{ item }}"
-    value: '1'
+    value: "1"
     sysctl_set: yes
     state: present
     reload: yes
@@ -23,12 +22,11 @@
     - net.bridge.bridge-nf-call-ip6tables
     - net.bridge.bridge-nf-call-iptables
 
-
 - name: Download Script Instalacao Docker
   get_url:
     url: "{{ url_docker_script }}"
     dest: /tmp/install_docker.sh
-    mode: '0755'
+    mode: "0755"
 
 - name: Instalando o Docker
   shell: /tmp/install_docker.sh
@@ -41,15 +39,15 @@
     dest: /etc/docker/daemon.json
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify: Restart Docker
-  
+
 - name: Instalação de pre-req
   apt:
     pkg:
-    - apt-transport-https
-    - ca-certificates
-    - curl
+      - apt-transport-https
+      - ca-certificates
+      - curl
     state: present
     update_cache: yes
 
@@ -57,7 +55,6 @@
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
-
 
 - name: instala o repo do k8s
   apt_repository:
@@ -68,9 +65,9 @@
 - name: Instalação do kubernetes
   apt:
     pkg:
-    - "kubelet={{ k8s_version }}*"
-    - "kubeadm={{ k8s_version }}*"
-    - "kubectl={{ k8s_version }}*"
+      - "kubelet={{ k8s_version }}*"
+      - "kubeadm={{ k8s_version }}*"
+      - "kubectl={{ k8s_version }}*"
     state: present
     update_cache: yes
 
@@ -88,13 +85,4 @@
   args:
     creates: /usr/local/bin/helm
   tags:
-   - tools
-
-
-
-
-
-
-
-
-
+    - tools
